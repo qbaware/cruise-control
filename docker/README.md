@@ -15,21 +15,25 @@ The image contains **no Cruise Control configuration**.
 You must mount your own config directory at `/cc/config`.
 Without it, the container fails at startup.
 
+The easiest way to create it is to copy the repository's [`config/`](../config) directory and edit the copy.
+Do not use its values unchanged: `bootstrap.servers` points at `localhost`, and the capacity files describe example brokers.
+
 The directory must contain:
 
 - `cruisecontrol.properties`, with at least `bootstrap.servers` and `capacity.config.file` set for your cluster.
-- Every file `cruisecontrol.properties` refers to, e.g. the capacity file (`capacity.json`, `capacityJBOD.json` or `capacityCores.json`) and `clusterConfigs.json`.
+- The capacity file, e.g. `capacityJBOD.json`, describing your brokers.
+- Every other file Cruise Control reads, e.g. `clusterConfigs.json` (`cluster.configs.file`) and `brokerSets.json` (`broker.set.config.file`, used by `BrokerSetAwareGoal`).
   Relative paths are resolved from `/cc`, so `capacity.config.file=config/capacity.json` points at `/cc/config/capacity.json`.
 - Optionally `cruise_control_jaas.conf`, which the start script picks up automatically.
-
-Use the repository's [`config/`](../config) directory as a template.
-Do not use its values unchanged: `bootstrap.servers` points at `localhost`, and the capacity files describe example brokers.
 
 ```sh
 docker run -p 9090:9090 \
   -v $(pwd)/my-config:/cc/config \
   cruise-control
 ```
+
+The REST API always listens on port `9090`: the image's start command overrides `webserver.http.port`.
+Keep `webserver.http.address=0.0.0.0` so the API is reachable from outside the container.
 
 ## Pass environment variables
 
