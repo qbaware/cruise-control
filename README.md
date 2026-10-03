@@ -116,6 +116,10 @@ Control). The metrics reporter periodically samples the Kafka raw metrics on the
 * The metrics of a newly up broker may take a few minutes to get stable. Cruise Control will drop the inconsistent 
 metrics (e.g when topic bytes-in is higher than broker bytes-in), so first few windows may not have enough valid partitions.
 
+### Running in a Container ###
+Build the image with `docker build -t cruise-control .` and run it with your own configuration mounted at `/cc/config`.
+The image contains no Cruise Control configuration. See [docker/README.md](docker/README.md) for the required files and supported environment variables.
+
 ### REST API ###
 Cruise Control provides a [REST API](https://github.com/linkedin/cruise-control/wiki/REST-APIs) for users 
 to interact with. See the wiki page for more details.
