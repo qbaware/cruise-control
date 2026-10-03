@@ -6,8 +6,8 @@
 docker build -t cruise-control .
 ```
 
-Run this from the repository root.
-Docker is the only prerequisite: the image builds Cruise Control from source.
+Run this from the root of a git clone that includes tags: the build derives the version from them.
+Docker (with BuildKit, the default since Docker 23) is the only prerequisite: the image builds Cruise Control from source.
 
 ## Provide your configuration
 
