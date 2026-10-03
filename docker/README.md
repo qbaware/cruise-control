@@ -22,7 +22,7 @@ The directory must contain:
 
 - `cruisecontrol.properties`, with at least `bootstrap.servers` and `capacity.config.file` set for your cluster.
 - The capacity file, e.g. `capacityJBOD.json`, describing your brokers.
-- Every other file Cruise Control reads, e.g. `clusterConfigs.json` (`cluster.configs.file`) and `brokerSets.json` (`broker.set.config.file`, used by `BrokerSetAwareGoal`).
+- Every other file Cruise Control reads, e.g. `clusterConfigs.json` (`cluster.configs.file`), and `brokerSets.json` (`broker.set.config.file`) while `BrokerSetAwareGoal` is in `goals`, which it is by default.
   Relative paths are resolved from `/cc`, so `capacity.config.file=config/capacity.json` points at `/cc/config/capacity.json`.
 - Optionally `cruise_control_jaas.conf`, which the start script picks up automatically.
 
@@ -32,8 +32,7 @@ docker run -p 9090:9090 \
   cruise-control
 ```
 
-The REST API always listens on port `9090`: the image's start command overrides `webserver.http.port`.
-Keep `webserver.http.address=0.0.0.0` so the API is reachable from outside the container.
+The REST API always listens on `0.0.0.0:9090`: the image's start command overrides `webserver.http.port` and `webserver.http.address`.
 
 ## Pass environment variables
 
@@ -68,7 +67,10 @@ The start script reads these variables:
 | `KAFKA_JVM_PERFORMANCE_OPTS` | GC and other JVM tuning                         | G1 settings from the start script          |
 | `KAFKA_OPTS`                 | Any other JVM options                           | empty                                      |
 | `JMX_PORT`                   | Port for Cruise Control's JMX metrics           | not set                                    |
+| `KAFKA_JMX_OPTS`             | JMX options                                     | remote JMX, no authentication, no SSL      |
 | `KAFKA_LOG4J_OPTS`           | Log4j2 configuration                            | `/cc/log4j2.properties`, console only      |
+
+To reach JMX from outside the container, set `KAFKA_JMX_OPTS` to the defaults from `kafka-cruise-control-start.sh` plus `-Dcom.sun.management.jmxremote.rmi.port=<JMX_PORT>` and `-Djava.rmi.server.hostname=<host>`, and publish the port.
 
 To use your own logging configuration, put `log4j2.properties` in your config directory and set:
 

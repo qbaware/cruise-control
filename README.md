@@ -118,7 +118,8 @@ metrics (e.g when topic bytes-in is higher than broker bytes-in), so first few w
 
 ### Running in a Container ###
 Build the image with `docker build -t cruise-control .` and run it with your own configuration mounted at `/cc/config`.
-The image contains no Cruise Control configuration. See [docker/README.md](docker/README.md) for the required files and supported environment variables.
+The image contains no Cruise Control configuration.
+See [docker/README.md](docker/README.md) for the required files and supported environment variables.
 
 ### REST API ###
 Cruise Control provides a [REST API](https://github.com/linkedin/cruise-control/wiki/REST-APIs) for users 
